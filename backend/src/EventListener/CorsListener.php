@@ -10,10 +10,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 class CorsListener
 {
-    /**
-     * Intercepta la petición ANTES de que llegue al controlador.
-     * Si es una petición OPTIONS (pre-flight), devuelve respuesta inmediata.
-     */
+
     #[AsEventListener(event: KernelEvents::REQUEST, priority: 9999)]
     public function onKernelRequest(RequestEvent $event): void
     {
@@ -32,10 +29,7 @@ class CorsListener
         }
     }
 
-    /**
-     * Intercepta la respuesta ANTES de enviarla al navegador
-     * y le pega las cabeceras de permisos.
-     */
+
     #[AsEventListener(event: KernelEvents::RESPONSE)]
     public function onKernelResponse(ResponseEvent $event): void
     {
