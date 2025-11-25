@@ -17,7 +17,7 @@ class CorsListener
     #[AsEventListener(event: KernelEvents::REQUEST, priority: 9999)]
     public function onKernelRequest(RequestEvent $event): void
     {
-        // No aplicar en sub-peticiones internas
+        // Not apply on internal requests
         if (!$event->isMainRequest()) {
             return;
         }
@@ -25,7 +25,7 @@ class CorsListener
         $request = $event->getRequest();
         $method = $request->getRealMethod();
 
-        // Si es una petición OPTIONS (el navegador preguntando permisos), respondemos OK ya mismo
+        // If OPTIONS request, return OK
         if ($method === 'OPTIONS') {
             $response = new Response();
             $event->setResponse($response);
@@ -45,13 +45,13 @@ class CorsListener
 
         $response = $event->getResponse();
 
-        // Permitir cualquier origen (para desarrollo es lo más fácil)
+        // Allow from any origin
         $response->headers->set('Access-Control-Allow-Origin', '*');
 
-        // Permitir los métodos que usa tu API
+        // Allow API Calls
         $response->headers->set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
 
-        // Permitir cabeceras comunes (Content-Type para JSON)
+        // Allow common headers
         $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
     }
 }
