@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\TrackRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: TrackRepository::class)]
@@ -12,19 +13,23 @@ class Track
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['track:read', 'track:write'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "Title is required")]
+    #[Groups(['track:read', 'track:write'])]
     private ?string $title = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "Artist is required")]
+    #[Groups(['track:read', 'track:write'])]
     private ?string $artist = null;
 
     #[ORM\Column]
     #[Assert\NotBlank(message: "Duration is required")]
     #[Assert\Positive(message: "Duration must be a positive number")]
+    #[Groups(['track:read', 'track:write'])]
     private ?int $duration = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -32,6 +37,7 @@ class Track
         pattern: '/^[A-Z]{2}-[A-Z0-9]{3}-\d{2}-\d{5}$/',
         message: "ISRC must match the format XX-XXX-XX-XXXXX"
     )]
+    #[Groups(['track:read', 'track:write'])]
     private ?string $isrc = null;
 
     public function getId(): ?int

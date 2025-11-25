@@ -21,8 +21,19 @@ class TrackController extends AbstractController
     public function getTracks(): JsonResponse
     {
         $tracks = $this->trackService->getAllTracks();
-        
-        return $this->json($tracks);
+
+        // Manually serialize to ensure we get proper output
+        $data = array_map(function($track) {
+            return [
+                'id' => $track->getId(),
+                'title' => $track->getTitle(),
+                'artist' => $track->getArtist(),
+                'duration' => $track->getDuration(),
+                'isrc' => $track->getIsrc(),
+            ];
+        }, $tracks);
+
+        return $this->json($data);
     }
 
     #[Route('', name: 'create_track', methods: ['POST'])]
@@ -36,7 +47,15 @@ class TrackController extends AbstractController
             return $this->json(['errors' => $result['errors']], Response::HTTP_BAD_REQUEST);
         }
 
-        return $this->json($result['track'], Response::HTTP_CREATED);
+        $track = $result['track'];
+
+        return $this->json([
+            'id' => $track->getId(),
+            'title' => $track->getTitle(),
+            'artist' => $track->getArtist(),
+            'duration' => $track->getDuration(),
+            'isrc' => $track->getIsrc(),
+        ], Response::HTTP_CREATED);
     }
 
     #[Route('/{id}', name: 'update_track', methods: ['PUT'])]
@@ -54,6 +73,14 @@ class TrackController extends AbstractController
             return $this->json(['errors' => $result['errors']], Response::HTTP_BAD_REQUEST);
         }
 
-        return $this->json($result['track']);
+        $track = $result['track'];
+
+        return $this->json([
+            'id' => $track->getId(),
+            'title' => $track->getTitle(),
+            'artist' => $track->getArtist(),
+            'duration' => $track->getDuration(),
+            'isrc' => $track->getIsrc(),
+        ]);
     }
 }
